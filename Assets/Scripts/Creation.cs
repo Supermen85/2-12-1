@@ -4,6 +4,8 @@ public class Creation : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
     [SerializeField] private Block _prefab;
+    [SerializeField] private int _creatingBlocksMin = 2;
+    [SerializeField] private int _creatingBlocksMax = 6;
 
     private RaycastHit _hit;
 
@@ -20,10 +22,10 @@ public class Creation : MonoBehaviour
         if (_hit.transform.TryGetComponent<Block>(out Block block) == false)
             return;
 
-        Destroy(block.gameObject);
-
         if (CanCreate(block))
             CreateBlocks(block);
+
+        Destroy(block.gameObject);
     }
 
     private void CreateBlocks(Block block)
@@ -34,10 +36,16 @@ public class Creation : MonoBehaviour
         {
             Block newBlock = Instantiate(_prefab, GetCreatePosition(block), Quaternion.identity);
 
+            Explosion explosion = block.GetComponent<Explosion>();
+
             newBlock.SetMaterial();
             newBlock.ReduceScale(block.transform.localScale);
             newBlock.ReduceCreateChance(block.ChanceToCreatePercent);
-            newBlock.Push(block.transform.position);
+
+            Explosion newExplosion = newBlock.GetComponent<Explosion>();
+
+            newExplosion.ReduceExplosionForce(explosion.ExplosionForce);
+            newExplosion.ReduceExplosionRadius(explosion.ExplosionRadius);
         }
     }
 
@@ -45,18 +53,12 @@ public class Creation : MonoBehaviour
     {
         int maxChance = 100;
 
-        if (Random.Range(0, maxChance + 1) <= block.ChanceToCreatePercent)
-            return true;
-
-        return false;
+        return Random.Range(0, maxChance + 1) <= block.ChanceToCreatePercent;
     }
 
     private int GetCreatingBlocksCount()
     {
-        int min = 2;
-        int max = 6;
-
-        return Random.Range(min, max + 1);
+        return Random.Range(_creatingBlocksMin, _creatingBlocksMax + 1);
     }
 
     private Vector3 GetCreatePosition(Block block)
