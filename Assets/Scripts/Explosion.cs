@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-    [SerializeField] private float _explosionForce = 1000;
-    [SerializeField] private float _explosionRadius = 20;
-    [SerializeField] private float _explosionForceReducer = 2;
-    [SerializeField] private float _explosionRadiusReducer = 2;
+    [SerializeField] private float _explosionForce = 500;
+    [SerializeField] private float _explosionRadius = 10;
+    [SerializeField] private float _explosionForceMultiplier = 2;
+    [SerializeField] private float _explosionRadiusMultiplier = 2;
 
     public float ExplosionForce => _explosionForce;
 
@@ -14,12 +14,12 @@ public class Explosion : MonoBehaviour
 
     public void ReduceExplosionForce(float force)
     {
-        _explosionForce = force / _explosionForceReducer;
+        _explosionForce = force * _explosionForceMultiplier;
     }
 
     public void ReduceExplosionRadius(float radius)
     {
-        _explosionRadius = radius / _explosionRadiusReducer;
+        _explosionRadius = radius * _explosionRadiusMultiplier;
     }
 
     public void Explode()

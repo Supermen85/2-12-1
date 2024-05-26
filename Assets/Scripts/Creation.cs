@@ -63,8 +63,12 @@ public class Creation : MonoBehaviour
 
     private Vector3 GetCreatePosition(Block block)
     {
-        float deltaX = Random.Range(-10, 11) / 10f;
-        float deltaZ = Random.Range(-10, 11) / 10f;
+        int min = -10;
+        int max = 11;
+        float divisor = 10f;
+
+        float deltaX = Random.Range(min, max) / divisor;
+        float deltaZ = Random.Range(min, max) / divisor;
 
         Vector3 position = block.transform.position;
 
